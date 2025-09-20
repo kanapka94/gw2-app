@@ -21,6 +21,40 @@ db.serialize(() => {
   `);
 });
 
+app.get('/characters', async (req, res) => {
+	try {
+		const response = await fetch('https://api.guildwars2.com/v2/characters', {
+			headers: {
+				Authorization: `Bearer ${process.env.GW2_API_TOKEN}`,
+			},
+		});
+
+		const data = await response.json();
+		res.json(data);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: 'Cannot fetch characters' });
+	}
+});
+
+app.get('/characters/:id', async (req, res) => {
+	const { id } = req.params;
+
+	try {
+		const response = await fetch(`https://api.guildwars2.com/v2/characters/${id}`, {
+			headers: {
+				Authorization: `Bearer ${process.env.GW2_API_TOKEN}`,
+			},
+		});
+
+		const data = await response.json();
+		res.json(data);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: 'Cannot fetch character by id: ' + id });
+	}
+});
+
 app.get('/professions', async (req, res) => {
 	try {
 		const response = await fetch('https://api.guildwars2.com/v2/professions', {
