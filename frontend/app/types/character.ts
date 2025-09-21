@@ -34,10 +34,4 @@ export interface Character {
 	time_played: number;
 }
 
-export interface CharacterSummary {
-	name: string;
-	profession: string;
-	level: number;
-	created: string;
-	time_played: number;
-}
+export type CharactersResponse = string[];

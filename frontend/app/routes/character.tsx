@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import type { Route } from './+types/character';
+import type { Route } from '../character/+types/character';
 import type { Character as CharacterType } from '../types/character';
 
 export async function loader({ params }: Route.LoaderArgs) {

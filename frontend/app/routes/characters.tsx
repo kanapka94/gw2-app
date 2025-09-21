@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import type { Route } from './+types/characters';
-import type { CharacterSummary } from '../types/character';
+import type { CharactersResponse } from '../types/character';
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -25,20 +25,32 @@ export async function loader({}: Route.LoaderArgs) {
 export default function Characters({ loaderData }: Route.ComponentProps) {
 	const { characters } = loaderData;
 
-	const formatPlayTime = (seconds: number): string => {
-		const hours = Math.floor(seconds / 3600);
-		const minutes = Math.floor((seconds % 3600) / 60);
-		return `${hours}h ${minutes}m`;
+	// Generate gradient background based on character name length
+	const getGradientBackground = (name: string) => {
+		const length = name.length;
+		const gradients = [
+			'from-purple-400 via-pink-500 to-red-500', // 1-5 letters
+			'from-blue-400 via-purple-500 to-pink-500', // 6-10 letters
+			'from-green-400 via-blue-500 to-purple-500', // 11-15 letters
+			'from-yellow-400 via-orange-500 to-red-500', // 16-20 letters
+			'from-indigo-400 via-purple-500 to-pink-500', // 21+ letters
+		];
+
+		if (length <= 5) return gradients[0];
+		if (length <= 10) return gradients[1];
+		if (length <= 15) return gradients[2];
+		if (length <= 20) return gradients[3];
+		return gradients[4];
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-100">
+		<div className="min-h-screen bg-gray-900">
 			<div className="container mx-auto px-4 py-8">
 				<div className="flex items-center justify-between mb-8">
-					<h1 className="text-3xl font-bold text-gray-900">Your Characters</h1>
+					<h1 className="text-3xl font-bold text-white">Your Characters</h1>
 					<Link
 						to="/"
-						className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+						className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors"
 					>
 						Back to Home
 					</Link>
@@ -46,43 +58,19 @@ export default function Characters({ loaderData }: Route.ComponentProps) {
 
 				{characters.length === 0 ? (
 					<div className="text-center py-12">
-						<p className="text-gray-600 text-lg">No characters found</p>
+						<p className="text-gray-400 text-lg">No characters found</p>
 					</div>
 				) : (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{characters.map((character: CharacterSummary) => (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+						{(characters as CharactersResponse).map((character) => (
 							<Link
-								key={character.name}
-								to={`/character/${encodeURIComponent(character.name)}`}
-								className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 block"
+								key={character}
+								to={`/character/${encodeURIComponent(character)}`}
+								className={`h-64 bg-gradient-to-br ${getGradientBackground(character)} rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center group`}
 							>
-								<div className="flex items-center justify-between mb-4">
-									<h2 className="text-xl font-semibold text-gray-900 truncate">{character.name}</h2>
-									<span className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
-										Level {character.level}
-									</span>
-								</div>
-
-								<div className="space-y-2">
-									<div className="flex items-center">
-										<span className="text-sm font-medium text-gray-500 w-20">Profession:</span>
-										<span className="text-sm text-gray-900 capitalize">{character.profession}</span>
-									</div>
-
-									<div className="flex items-center">
-										<span className="text-sm font-medium text-gray-500 w-20">Play Time:</span>
-										<span className="text-sm text-gray-900">
-											{formatPlayTime(character.time_played)}
-										</span>
-									</div>
-
-									<div className="flex items-center">
-										<span className="text-sm font-medium text-gray-500 w-20">Created:</span>
-										<span className="text-sm text-gray-900">
-											{new Date(character.created).toLocaleDateString()}
-										</span>
-									</div>
-								</div>
+								<h2 className="text-2xl font-bold text-white text-center px-4 group-hover:text-gray-100 transition-colors duration-300">
+									{character}
+								</h2>
 							</Link>
 						))}
 					</div>
