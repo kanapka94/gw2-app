@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import type { Route } from './+types/characters';
-import type { CharactersResponse } from '../types/character';
+import { useCharacters } from '../hooks/useCharacters';
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -9,21 +9,8 @@ export function meta({}: Route.MetaArgs) {
 	];
 }
 
-export async function loader({}: Route.LoaderArgs) {
-	try {
-		const response = await fetch('http://localhost:4000/characters');
-		if (!response.ok) {
-			throw new Error('Failed to fetch characters');
-		}
-		const characters = await response.json();
-		return { characters };
-	} catch (error) {
-		throw new Response('Failed to fetch characters', { status: 500 });
-	}
-}
-
-export default function Characters({ loaderData }: Route.ComponentProps) {
-	const { characters } = loaderData;
+export default function Characters() {
+	const { data: characters, isLoading, error } = useCharacters();
 
 	// Generate gradient background based on character name length
 	const getGradientBackground = (name: string) => {
@@ -56,13 +43,23 @@ export default function Characters({ loaderData }: Route.ComponentProps) {
 					</Link>
 				</div>
 
-				{characters.length === 0 ? (
+				{isLoading ? (
+					<div className="text-center py-12">
+						<div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
+						<p className="text-gray-600 dark:text-gray-400 text-lg mt-4">Loading characters...</p>
+					</div>
+				) : error ? (
+					<div className="text-center py-12">
+						<p className="text-red-600 dark:text-red-400 text-lg">Error loading characters</p>
+						<p className="text-gray-600 dark:text-gray-400 text-sm mt-2">{error.message}</p>
+					</div>
+				) : !characters || characters.length === 0 ? (
 					<div className="text-center py-12">
 						<p className="text-gray-600 dark:text-gray-400 text-lg">No characters found</p>
 					</div>
 				) : (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-						{(characters as CharactersResponse).map((character) => (
+						{characters.map((character) => (
 							<Link
 								key={character}
 								to={`/character/${encodeURIComponent(character)}`}

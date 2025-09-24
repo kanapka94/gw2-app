@@ -1,23 +1,10 @@
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 import type { Route } from './+types/character';
+import { useCharacter } from '../hooks/useCharacter';
 
-export async function loader({ params }: Route.LoaderArgs) {
-	try {
-		const response = await fetch(
-			`http://localhost:4000/characters/${encodeURIComponent(params.name)}`
-		);
-		if (!response.ok) {
-			throw new Error('Failed to fetch character');
-		}
-		const character = await response.json();
-		return { character };
-	} catch (error) {
-		throw new Response('Failed to fetch character', { status: 500 });
-	}
-}
-
-export default function Character({ loaderData }: Route.ComponentProps) {
-	const { character } = loaderData;
+export default function Character() {
+	const { name } = useParams();
+	const { data: character, isLoading, error } = useCharacter(name || '');
 
 	const formatPlayTime = (seconds: number): string => {
 		const hours = Math.floor(seconds / 3600);
@@ -30,6 +17,77 @@ export default function Character({ loaderData }: Route.ComponentProps) {
 		}
 		return `${hours}h ${minutes}m`;
 	};
+
+	if (isLoading) {
+		return (
+			<div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
+				<div className="container mx-auto px-4 py-8">
+					<div className="flex items-center justify-between mb-8">
+						<div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+						<Link
+							to="/characters"
+							className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+						>
+							Back to Characters
+						</Link>
+					</div>
+					<div className="text-center py-12">
+						<div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+						<p className="text-gray-600 dark:text-gray-400 text-lg mt-4">
+							Loading character details...
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
+				<div className="container mx-auto px-4 py-8">
+					<div className="flex items-center justify-between mb-8">
+						<h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+							Character Not Found
+						</h1>
+						<Link
+							to="/characters"
+							className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+						>
+							Back to Characters
+						</Link>
+					</div>
+					<div className="text-center py-12">
+						<p className="text-red-600 dark:text-red-400 text-lg">Error loading character</p>
+						<p className="text-gray-600 dark:text-gray-400 text-sm mt-2">{error.message}</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (!character) {
+		return (
+			<div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
+				<div className="container mx-auto px-4 py-8">
+					<div className="flex items-center justify-between mb-8">
+						<h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+							Character Not Found
+						</h1>
+						<Link
+							to="/characters"
+							className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+						>
+							Back to Characters
+						</Link>
+					</div>
+					<div className="text-center py-12">
+						<p className="text-gray-600 dark:text-gray-400 text-lg">Character not found</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
