@@ -37,11 +37,11 @@ app.get('/characters', async (req, res) => {
 	}
 });
 
-app.get('/characters/:id', async (req, res) => {
-	const { id } = req.params;
+app.get('/characters/:name', async (req, res) => {
+	const { name } = req.params;
 
 	try {
-		const response = await fetch(`https://api.guildwars2.com/v2/characters/${id}`, {
+		const response = await fetch(`https://api.guildwars2.com/v2/characters/${name}`, {
 			headers: {
 				Authorization: `Bearer ${process.env.GW2_API_TOKEN}`,
 			},
@@ -51,7 +51,7 @@ app.get('/characters/:id', async (req, res) => {
 		res.json(data);
 	} catch (err) {
 		console.error(err);
-		res.status(500).json({ error: 'Cannot fetch character by id: ' + id });
+		res.status(500).json({ error: 'Cannot fetch character by name: ' + name });
 	}
 });
 

@@ -5,7 +5,7 @@ import type { Character as CharacterType } from '../types/character';
 export async function loader({ params }: Route.LoaderArgs) {
 	try {
 		const response = await fetch(
-			`http://localhost:4000/characters/${encodeURIComponent(params.id)}`
+			`http://localhost:4000/characters/${encodeURIComponent(params.name)}`
 		);
 		if (!response.ok) {
 			throw new Error('Failed to fetch character');
@@ -17,7 +17,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 	}
 }
 
-export function Character({ loaderData }: Route.ComponentProps) {
+export default function Character({ loaderData }: Route.ComponentProps) {
 	const { character } = loaderData;
 
 	const formatPlayTime = (seconds: number): string => {
@@ -33,73 +33,88 @@ export function Character({ loaderData }: Route.ComponentProps) {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-100">
+		<div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
 			<div className="container mx-auto px-4 py-8">
 				<div className="flex items-center justify-between mb-8">
-					<h1 className="text-3xl font-bold text-gray-900">{character.name}</h1>
+					<h1 className="text-3xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+						{character.name}
+					</h1>
 					<Link
 						to="/characters"
-						className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+						className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
 					>
 						Back to Characters
 					</Link>
 				</div>
 
-				<div className="bg-white rounded-lg shadow-md p-8">
+				<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-8">
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 						<div className="space-y-4">
-							<h2 className="text-xl font-semibold text-gray-900 mb-4">Basic Info</h2>
+							<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+								Basic Info
+							</h2>
 
 							<div className="space-y-3">
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Name:</span>
-									<span className="text-gray-900">{character.name}</span>
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Name:</span>
+									<span className="text-gray-900 dark:text-white font-semibold">
+										{character.name}
+									</span>
 								</div>
 
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Profession:</span>
-									<span className="text-gray-900 capitalize">{character.profession}</span>
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Profession:</span>
+									<span className="text-gray-900 dark:text-white capitalize font-semibold">
+										{character.profession}
+									</span>
 								</div>
 
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Level:</span>
-									<span className="text-gray-900">{character.level}</span>
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Level:</span>
+									<span className="text-gray-900 dark:text-white font-semibold">
+										{character.level}
+									</span>
 								</div>
 
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Race:</span>
-									<span className="text-gray-900 capitalize">{character.race}</span>
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Race:</span>
+									<span className="text-gray-900 dark:text-white capitalize font-semibold">
+										{character.race}
+									</span>
 								</div>
 
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Gender:</span>
-									<span className="text-gray-900 capitalize">{character.gender}</span>
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Gender:</span>
+									<span className="text-gray-900 dark:text-white capitalize font-semibold">
+										{character.gender}
+									</span>
 								</div>
 							</div>
 						</div>
 
 						<div className="space-y-4">
-							<h2 className="text-xl font-semibold text-gray-900 mb-4">Stats</h2>
+							<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
+								Stats
+							</h2>
 
 							<div className="space-y-3">
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Time Played:</span>
-									<span className="text-gray-900">{formatPlayTime(character.time_played)}</span>
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Time Played:</span>
+									<span className="text-gray-900 dark:text-white font-semibold">
+										{formatPlayTime(character.age)}
+									</span>
 								</div>
 
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Age:</span>
-									<span className="text-gray-900">{character.age} years</span>
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Deaths:</span>
+									<span className="text-gray-900 dark:text-white font-semibold">
+										{character.deaths}
+									</span>
 								</div>
 
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Deaths:</span>
-									<span className="text-gray-900">{character.deaths}</span>
-								</div>
-
-								<div className="flex justify-between">
-									<span className="font-medium text-gray-600">Created:</span>
-									<span className="text-gray-900">
+								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+									<span className="font-medium text-gray-600 dark:text-gray-300">Created:</span>
+									<span className="text-gray-900 dark:text-white font-semibold">
 										{new Date(character.created).toLocaleDateString()}
 									</span>
 								</div>
@@ -107,19 +122,26 @@ export function Character({ loaderData }: Route.ComponentProps) {
 						</div>
 
 						<div className="space-y-4">
-							<h2 className="text-xl font-semibold text-gray-900 mb-4">Crafting</h2>
+							<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+								Crafting
+							</h2>
 
 							<div className="space-y-3">
-								{character.craftings.length > 0 ? (
-									character.craftings.map((craft: any, index: number) => (
-										<div key={index} className="flex justify-between items-center">
-											<span className="font-medium text-gray-600 capitalize">
+								{character.crafting && character.crafting.length > 0 ? (
+									character.crafting.map((craft: any, index: number) => (
+										<div
+											key={index}
+											className="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"
+										>
+											<span className="font-medium text-gray-600 dark:text-gray-300 capitalize">
 												{craft.discipline}:
 											</span>
 											<div className="flex items-center space-x-2">
-												<span className="text-gray-900">Level {craft.rating}</span>
+												<span className="text-gray-900 dark:text-white font-semibold">
+													Level {craft.rating}
+												</span>
 												{craft.active && (
-													<span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+													<span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg">
 														Active
 													</span>
 												)}
@@ -127,23 +149,33 @@ export function Character({ loaderData }: Route.ComponentProps) {
 										</div>
 									))
 								) : (
-									<p className="text-gray-500">No crafting disciplines</p>
+									<p className="text-gray-500 dark:text-gray-400 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+										No crafting disciplines
+									</p>
 								)}
 							</div>
 						</div>
 					</div>
 
 					{character.guild && (
-						<div className="mt-8 pt-8 border-t border-gray-200">
-							<h2 className="text-xl font-semibold text-gray-900 mb-4">Guild</h2>
-							<p className="text-gray-900">{character.guild}</p>
+						<div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+							<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400 bg-clip-text text-transparent">
+								Guild
+							</h2>
+							<p className="text-gray-900 dark:text-white p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 font-semibold">
+								{character.guild}
+							</p>
 						</div>
 					)}
 
 					{character.title && (
-						<div className="mt-8 pt-8 border-t border-gray-200">
-							<h2 className="text-xl font-semibold text-gray-900 mb-4">Title</h2>
-							<p className="text-gray-900">Title ID: {character.title}</p>
+						<div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+							<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-yellow-600 to-orange-600 dark:from-yellow-400 dark:to-orange-400 bg-clip-text text-transparent">
+								Title
+							</h2>
+							<p className="text-gray-900 dark:text-white p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 font-semibold">
+								Title ID: {character.title}
+							</p>
 						</div>
 					)}
 				</div>

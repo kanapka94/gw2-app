@@ -11,11 +11,11 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
 	return (
-		<div className="min-h-screen bg-gray-100">
+		<div className="min-h-screen bg-gray-100 dark:bg-gray-950 dark:text-white">
 			<div className="container mx-auto px-4 py-8">
 				<div className="text-center mb-8">
-					<h1 className="text-4xl font-bold text-gray-900 mb-4">Guild Wars 2 App</h1>
-					<p className="text-lg text-gray-600 mb-8">Manage your characters and favorites</p>
+					<h1 className="text-4xl font-bold light:text-gray-900 mb-4">Guild Wars 2 App</h1>
+					<p className="text-lg light:text-gray-600 mb-8">Manage your characters and favorites</p>
 
 					<div className="flex justify-center space-x-4">
 						<Link
