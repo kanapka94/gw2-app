@@ -1,60 +1,77 @@
-// Logging utilities with colors and timestamps
-const colors = {
-	reset: '\x1b[0m',
-	bright: '\x1b[1m',
-	dim: '\x1b[2m',
-	red: '\x1b[31m',
-	green: '\x1b[32m',
-	yellow: '\x1b[33m',
-	blue: '\x1b[34m',
-	magenta: '\x1b[35m',
-	cyan: '\x1b[36m',
-	white: '\x1b[37m',
-};
+const pino = require('pino');
 
+// Create Pino logger with pretty printing for development
+const logger = pino({
+	level: process.env.LOG_LEVEL || 'info',
+	transport:
+		process.env.NODE_ENV === 'production'
+			? undefined
+			: {
+					target: 'pino-pretty',
+					options: {
+						colorize: true,
+						translateTime: 'SYS:standard',
+						ignore: 'pid,hostname',
+					},
+			  },
+});
+
+// Create a child logger for API requests with additional context
+const apiLogger = logger.child({ component: 'api' });
+
+// Create a child logger for requests with additional context
+const requestLogger = logger.child({ component: 'request' });
+
+// Enhanced logging methods that maintain the same interface but use structured logging
 const log = {
-	info: (message, data = '') => {
-		const timestamp = new Date().toISOString();
-		console.log(
-			`${colors.blue}[INFO]${colors.reset} ${colors.dim}${timestamp}${colors.reset} ${message}`,
-			data
-		);
+	info: (message, data = null) => {
+		if (data) {
+			logger.info({ data }, message);
+		} else {
+			logger.info(message);
+		}
 	},
-	success: (message, data = '') => {
-		const timestamp = new Date().toISOString();
-		console.log(
-			`${colors.green}[SUCCESS]${colors.reset} ${colors.dim}${timestamp}${colors.reset} ${message}`,
-			data
-		);
+	success: (message, data = null) => {
+		if (data) {
+			logger.info({ success: true, data }, message);
+		} else {
+			logger.info({ success: true }, message);
+		}
 	},
-	warn: (message, data = '') => {
-		const timestamp = new Date().toISOString();
-		console.log(
-			`${colors.yellow}[WARN]${colors.reset} ${colors.dim}${timestamp}${colors.reset} ${message}`,
-			data
-		);
+	warn: (message, data = null) => {
+		if (data) {
+			logger.warn({ data }, message);
+		} else {
+			logger.warn(message);
+		}
 	},
-	error: (message, data = '') => {
-		const timestamp = new Date().toISOString();
-		console.log(
-			`${colors.red}[ERROR]${colors.reset} ${colors.dim}${timestamp}${colors.reset} ${message}`,
-			data
-		);
+	error: (message, data = null) => {
+		if (data) {
+			logger.error({ data }, message);
+		} else {
+			logger.error(message);
+		}
 	},
-	api: (message, data = '') => {
-		const timestamp = new Date().toISOString();
-		console.log(
-			`${colors.cyan}[API]${colors.reset} ${colors.dim}${timestamp}${colors.reset} ${message}`,
-			data
-		);
+	api: (message, data = null) => {
+		if (data) {
+			apiLogger.info({ data }, message);
+		} else {
+			apiLogger.info(message);
+		}
 	},
-	request: (message, data = '') => {
-		const timestamp = new Date().toISOString();
-		console.log(
-			`${colors.magenta}[REQUEST]${colors.reset} ${colors.dim}${timestamp}${colors.reset} ${message}`,
-			data
-		);
+	request: (message, data = null) => {
+		if (data) {
+			requestLogger.info({ data }, message);
+		} else {
+			requestLogger.info(message);
+		}
 	},
 };
 
-module.exports = { log, colors };
+// Export the main logger and the enhanced log object for backward compatibility
+module.exports = {
+	log,
+	logger,
+	apiLogger,
+	requestLogger,
+};

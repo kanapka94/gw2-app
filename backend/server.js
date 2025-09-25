@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { log, colors } = require('./utils/logger');
+const pinoHttp = require('pino-http').default;
+const { log, logger } = require('./utils/logger');
 
 // Import route modules
 const characterRoutes = require('./routes/characters');
@@ -11,24 +12,8 @@ require('dotenv').config({ path: '.env' });
 
 const app = express();
 
-// Request logging middleware
-app.use((req, res, next) => {
-	const start = Date.now();
-	const { method, url, ip } = req;
-
-	log.request(`${colors.bright}${method}${colors.reset} ${url} from ${ip}`);
-
-	// Log response when finished
-	res.on('finish', () => {
-		const duration = Date.now() - start;
-		const status = res.statusCode;
-		const statusColor = status >= 400 ? colors.red : status >= 300 ? colors.yellow : colors.green;
-
-		log.request(`Response: ${statusColor}${status}${colors.reset} - ${duration}ms`);
-	});
-
-	next();
-});
+// Use pino-http for request logging
+app.use(pinoHttp({ logger }));
 
 app.use(cors());
 app.use(express.json());
