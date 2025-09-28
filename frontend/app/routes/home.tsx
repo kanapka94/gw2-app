@@ -17,12 +17,18 @@ export default function Home() {
 					<h1 className="text-4xl font-bold light:text-gray-900 mb-4">Guild Wars 2 App</h1>
 					<p className="text-lg light:text-gray-600 mb-8">Manage your characters and favorites</p>
 
-					<div className="flex justify-center space-x-4">
+					<div className="flex justify-center space-x-4 flex-wrap gap-4">
 						<Link
 							to="/characters"
 							className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
 						>
 							View Characters
+						</Link>
+						<Link
+							to="/account"
+							className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+						>
+							Account Details
 						</Link>
 						<Link
 							to="/favorites"

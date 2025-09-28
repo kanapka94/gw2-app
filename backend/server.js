@@ -7,6 +7,7 @@ const { log, logger } = require('./utils/logger');
 const characterRoutes = require('./routes/characters');
 const professionRoutes = require('./routes/professions');
 const favoriteRoutes = require('./routes/favorites');
+const accountRoutes = require('./routes/account');
 
 require('dotenv').config({ path: '.env' });
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/characters', characterRoutes);
 app.use('/professions', professionRoutes);
 app.use('/favorites', favoriteRoutes);
+app.use('/account', accountRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
