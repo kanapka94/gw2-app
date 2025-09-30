@@ -8,7 +8,7 @@ export interface Character {
 	age: number;
 	created: string;
 	deaths: number;
-	craftings: Array<{
+	crafting: Array<{
 		discipline: string;
 		rating: number;
 		active: boolean;

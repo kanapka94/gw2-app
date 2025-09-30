@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router';
 import type { Route } from './+types/character';
 import { useCharacter } from '../hooks/useCharacter';
+import { ProfessionImage } from '~/characters/ProfessionImage';
 
 export default function Character() {
 	const { name } = useParams();
@@ -121,6 +122,7 @@ export default function Character() {
 
 								<div className="flex justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
 									<span className="font-medium text-gray-600 dark:text-gray-300">Profession:</span>
+									<ProfessionImage profession={character.profession} />
 									<span className="text-gray-900 dark:text-white capitalize font-semibold">
 										{character.profession}
 									</span>
