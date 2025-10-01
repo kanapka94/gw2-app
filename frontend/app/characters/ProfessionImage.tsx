@@ -22,13 +22,15 @@ export function ProfessionImage({ profession }: ProfessionImageProps) {
 
 async function fetchProfessionImage(profession: string) {
 	console.log('fetching profession image', profession);
-	const response = await fetch(`https://api.guildwars2.com/v2/professions/${profession}`);
-
-	console.log(response.json());
+	const response = await fetch(`http://localhost:4000/professions/${profession}`);
 
 	if (!response.ok) {
 		throw new Error(`Failed to fetch profession image: ${profession}`);
 	}
 
-	return response.json().icon;
+	const data = await response.json();
+
+	console.log(data);
+
+	return data.icon as string;
 }
